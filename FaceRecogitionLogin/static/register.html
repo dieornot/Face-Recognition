@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>人脸识别登录系统</title>
+
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+
+<div class="materialContainer">
+    <form action="/register" enctype="multipart/form-data" method="POST">
+        <div class="box">
+            <div class="title">注册</div>
+            <div class="input">
+                <label for="name">用户名</label>
+                <input type="text" name="username" id="name">
+                <span class="spin"></span>
+            </div>
+            <div class="input">
+                <label for="pass">密码</label>
+                <input type="password" name="password" id="pass">
+                <span class="spin"></span>
+            </div>
+            <div class="input upload">
+                上传人脸识别基准图像
+                <input type="file" name="face_img" id="pass">
+                <span class="spin"></span>
+            </div>
+            <div class="button login">
+                <button id="blogLogin">
+                    <span>提交</span>
+                    <i class="fa fa-check"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/index.js"></script>
+
+</body>
+</html>
+

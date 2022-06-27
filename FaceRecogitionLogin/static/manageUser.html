@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/index.js"></script>
+    <link href="css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="materialContainer">
+    <div class="box">
+        欢迎您登录系统！！！！
+
+        <table id="table">
+            <tbody id="tbody">
+            <tr>
+                <th>id</th>
+                <th>用户名</th>
+                <th>操作</th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+<html>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/listUser",
+            method: "GET",
+            success: function (data) {
+                var tbody = document.getElementById("tbody");
+                var innerHTML = tbody.innerHTML;
+                var html;
+                for (var i = 0; i < data.length; i++) {
+                    var for_data = data[i];
+                    console.log(for_data);
+                    html =
+                        "<tr>" +
+                        "<th>" + for_data[0] + "</th>" +
+                        "<th>" + for_data[1] + "</th>" +
+                        "<th><a href='/static/updateUser.html?id=" + data[i][0] + "'>修改</a>" +
+                        "<th><a href='/deleteUser?id=" + data[i][0] + "'>删除</a>" +
+                        "<tr>";
+                    innerHTML = innerHTML + html;
+                    tbody.innerHTML = innerHTML;
+                }
+            },
+            error: function (e) {
+                console.log(e)
+            }
+        });
+    })
+</script>

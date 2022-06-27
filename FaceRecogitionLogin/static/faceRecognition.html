@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>人脸识别登录系统</title>
+
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+
+<div class="faceMaterialContainer">
+    <div class="box">
+        <div>
+            <video id="video" width="640px" height="360px" autoplay="autoplay"></video>
+        </div>
+        <div>
+            <canvas id="canvas" width="640px" height="360px" style="display: none"></canvas>
+        </div>
+        <img id="imgTag" src="" alt="" style="margin-left: 130px">
+        <div class="button login">
+            <button id="openVideoBtn">
+                <span>开启摄像头</span>
+                <i class="fa fa-check"></i>
+            </button>
+        </div>
+        <div class="button login">
+            <button id="takePhotoBtn">
+                <span>拍照并进行人脸识别</span>
+                <i class="fa fa-check"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/index.js"></script>
+
+</body>
+</html>
+<script>
+    let mediaStreamTrack = null; // 视频对象(全局)
+    let video = document.getElementById('video');//video对象，全局
+    function openMedia() {
+        let constraints = {
+            video: {
+                width: 640,
+                height: 360
+            },
+            audio: false
+        };
+        //获得video摄像头
+        let promise = navigator.mediaDevices.getUserMedia(constraints);
+        promise.then((mediaStream) => {
+            mediaStreamTrack = typeof mediaStream.stop === 'function' ? mediaStream : mediaStream.getTracks()[1];
+            video.srcObject = mediaStream;
+            video.play();
+        });
+    }
+
+    // 拍照
+    function takePhoto() {
+        //获得Canvas对象
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, 640, 360);
+
+
+        // toDataURL  ---  可传入'image/png'---默认, 'image/jpeg'
+        let img = document.getElementById('canvas').toDataURL();
+        // 这里的img就是得到的图片
+        document.getElementById('imgTag').src = img;
+    }
+
+    // 关闭摄像头
+    function closeMedia() {
+        mediaStreamTrack.stop();
+    }
+
+    //获取url参数的方法
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+
+    $("#openVideoBtn").click(function () {
+        openMedia();
+
+    });
+    $("#takePhotoBtn").click(function () {
+        takePhoto();
+        $("#video").remove();
+        //获取照相的图片
+        let img = document.getElementById('canvas').toDataURL();
+        console.log(img);
+        $.ajax({
+            url: '/faceLogin',
+            method: 'POST',
+            data: {
+                faceImg: img,
+                username:getQueryVariable("username")
+            },
+            success:function (data) {
+                alert("人脸识别通过，欢迎登录系统！！！");
+                window.location.href="/static/success.html"
+            },
+            error:function (e) {
+                var statusCode =e.responseText;
+                if (statusCode ==1){
+                    alert("摄像头未找到人脸，请重新识别");
+                    window.location.href="/static/faceRecognition.html?username="+getQueryVariable("username");
+                }else if (statusCode ==2){
+                     alert("人脸识别失败，请重新识别");
+                    window.location.href="/static/faceRecognition.html?username="+getQueryVariable("username");
+                }
+            }
+        });
+    });
+
+</script>

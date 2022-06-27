@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/index.js"></script>
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="materialContainer">
+    <div class="box">
+        <form action="/updateUser" enctype="multipart/form-data" method="POST">
+
+            <div class="title">用户修改</div>
+            <input type="text" name="id" id="id" style="display: none">
+            <div class="input">
+                <label for="name">用户名</label>
+                <input type="text" name="username" id="name">
+                <span class="spin"></span>
+            </div>
+            <!--            <div class="input">-->
+            <!--                <label for="oldpass">旧密码</label>-->
+            <!--                <input type="password" name="password" id="oldpass">-->
+            <!--                <span class="spin"></span>-->
+            <!--            </div>-->
+            <div class="input">
+                <label for="newpass">新密码</label>
+                <input type="password" name="password" id="newpass">
+                <span class="spin"></span>
+            </div>
+            <!--             <div class="input">-->
+            <!--                <label for="repass">确认密码</label>-->
+            <!--                <input type="password" name="password" id="repass">-->
+            <!--                <span class="spin"></span>-->
+            <!--            </div>-->
+            <div class="button login">
+                <button id="blogLogin">
+                    <span>确认修改</span>
+                    <i class="fa fa-check"></i>
+                </button>
+            </div>
+
+
+        </form>
+        <div class="button login">
+            <button id="back" onclick="window.history.back()">
+                <span>返回</span>
+                <i class="fa fa-check"></i>
+            </button>
+        </div>
+    </div>
+
+
+</div>
+
+</div></div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+        //获取url参数的方法
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) {
+                    return pair[1];
+                }
+            }
+            return (false);
+        }
+
+        $.ajax({
+            url: "/selectUserById?id=" + getQueryVariable("id"),
+            method: "GET",
+            success: function (data) {
+                document.getElementById("name").setAttribute("value", data[1])
+                document.getElementById("id").setAttribute("value",getQueryVariable("id"))
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        })
+    })
+
+</script>
